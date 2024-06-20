@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="mt-4">
+    <h1 class="my-4">{{ category.name }}</h1>
+    <div class="list-group">
+        {% for thread in threads %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <h5 class="mb-1">{{ thread.title }}</h5>
+            <p class="mb-1">{{ thread.description }}</p>
+            <small>Created on: {{ thread.created_at|date:"F d, Y" }}</small>
+        </a>
+        {% empty %}
+        <div class="alert alert-warning" role="alert">
+            No threads have been added yet.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
