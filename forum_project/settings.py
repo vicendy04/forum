@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "apps.main",
     # Third party apps.
     "django_bootstrap5",
+    "crispy_forms",
+    "crispy_bootstrap5",
     # Default apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -50,6 +52,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+# Docs: https://github.com/django-crispy-forms/crispy-bootstrap5
+# Configuration for crispy-forms
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

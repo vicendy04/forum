@@ -10,8 +10,8 @@ This project aims to create a simple forum where users can discuss various topic
 ### Todo list
 
 - [x] Do laundry
-- [x] Make new models like Category, Thread, Post
-- [ ] Add templates
-- [ ] Create User core function
+- [x] Create models: Category, Thread, Post
+- [x] Implement templates and forms for creating Thread and Post (comment)
+- [ ] Create User core functionality
 - [ ] Adding pagination
-- [ ] Slug
+- [ ] Add slug functionality
