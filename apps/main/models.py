@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 # Create your models here.
@@ -23,6 +24,10 @@ class Category(TimeStampedModel):
     def __str__(self):
         return self.name
 
+    # Tạo mẫu url chung
+    def get_absolute_url(self):
+        return reverse("apps.main:category_detail", kwargs={"pk": self.pk})
+
 
 class Thread(TimeStampedModel):
     """Thread mà người dùng đang thảo luận"""
@@ -38,6 +43,9 @@ class Thread(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse("apps.main:thread_detail", kwargs={"pk": self.pk})
 
 
 class Post(TimeStampedModel):
