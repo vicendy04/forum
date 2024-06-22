@@ -28,6 +28,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'apps.main:category_list' %}">Home</a>
                     </li>
+                    {% if user.is_authenticated %}
+                    <!-- If the user is authenticated, show different links -->
+                    <li class="nav-item">
+                        <span class="nav-link">Hello, {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{% url 'apps.accounts:logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <!-- If the user is not authenticated, show login and register links -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'apps.accounts:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'apps.accounts:register' %}">Register</a>
+                    </li>
+                    {% endif %}
+
                     <!-- Add more navigation links as needed -->
                 </ul>
             </div>

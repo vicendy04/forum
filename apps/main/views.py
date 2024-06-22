@@ -42,7 +42,7 @@ class ThreadDetailView(DetailView):
         thread = self.get_object()
         posts = thread.posts.order_by("-created_at")
         context["posts"] = posts
-        # Render form trong template
+        # Render form trong template với tên form là form
         context["form"] = PostForm()
         return context
 

@@ -30,6 +30,7 @@
             <h5 class="card-title">Add a Post</h5>
             <form method="post" action="{% url 'apps.main:post_create' thread.id %}">
                 {% csrf_token %}
+                <!-- tên form lấy trong context của views trả về -->
                 {% crispy form %}
             </form>
         </div>
