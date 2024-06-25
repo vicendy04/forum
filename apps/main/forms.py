@@ -5,6 +5,8 @@ from crispy_forms.layout import Submit
 
 
 class ThreadForm(forms.ModelForm):
+    """Form tạo mới Thread"""
+
     class Meta:
         model = Thread
         fields = ["category", "title"]
@@ -21,6 +23,8 @@ class ThreadForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    """Form tạo mới Post"""
+
     class Meta:
         model = Post
         fields = ["content"]

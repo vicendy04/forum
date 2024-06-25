@@ -1,7 +1,5 @@
 {% extends 'main/base.html' %}
 
-{% load crispy_forms_tags %}
-
 {% block content %}
 <div class="mt-4">
     <div class="card mb-3">
@@ -24,17 +22,7 @@
         {% endfor %}
     </div>
 
-    <!-- Form for adding a new post -->
-    <div class="card mt-3">
-        <div class="card-body">
-            <h5 class="card-title">Add a Post</h5>
-            <form method="post" action="{% url 'apps.main:post_create' thread.id %}">
-                {% csrf_token %}
-                <!-- tên form lấy trong context của views trả về -->
-                {% crispy form %}
-            </form>
-        </div>
-    </div>
+    {% include 'main/includes/add_post_form.html' %}
 
 </div>
 {% endblock content %}
