@@ -31,7 +31,7 @@
                     {% if user.is_authenticated %}
                     <!-- If the user is authenticated, show different links -->
                     <li class="nav-item">
-                        <span class="nav-link">Hello, {{ user.username }}</span>
+                        <span class="nav-link">Hello, {{ user.display_name}}</span>
                     </li>
                     <li class="nav-item">
                         <form method="POST" action="{% url 'accounts:logout' %}">

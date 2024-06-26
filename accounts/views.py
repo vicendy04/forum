@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView
+from django.contrib.auth import get_user_model
 
 from .forms import UserRegisterForm
 
@@ -11,7 +12,7 @@ from .forms import UserRegisterForm
 class UserRegisterView(CreateView):
     """Controller xử lý đăng ký"""
 
-    model = User
+    model = get_user_model()
     form_class = UserRegisterForm
     template_name = "registration/register.html"
 

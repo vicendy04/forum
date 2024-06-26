@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # My apps
     "main",
     "accounts",
+    "users.apps.UsersConfig",
     # Third party apps.
     "django_bootstrap5",
     "crispy_forms",
@@ -151,3 +152,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "main:category_list"
 LOGOUT_REDIRECT_URL = "main:category_list"
+
+# AUTH_USER_MODEL = "auth.User"
+AUTH_USER_MODEL = "users.User"
