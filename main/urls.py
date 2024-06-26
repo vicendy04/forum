@@ -3,7 +3,7 @@
 from django.urls import path
 from . import views
 
-app_name = "apps.main"
+app_name = "main"
 urlpatterns = [
     # Homepage
     path("", views.CategoryListView.as_view(), name="category_list"),

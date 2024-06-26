@@ -12,7 +12,7 @@ This project aims to create a simple forum where users can discuss various topic
 - [x] Do laundry
 - [x] Create models: Category, Thread, Post
 - [x] Implement templates and forms for creating Thread and Post (comment)
-- [ ] Add login, logout, register, change/reset password
+- [x] Use default auth urls
 - [ ] Create a custom User model
 - [ ] Add pagination
 - [ ] Add slug functionality

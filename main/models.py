@@ -26,7 +26,7 @@ class Category(TimeStampedModel):
 
     # Tạo mẫu url chung
     def get_absolute_url(self):
-        return reverse("apps.main:category_detail", kwargs={"pk": self.pk})
+        return reverse("main:category_detail", kwargs={"pk": self.pk})
 
 
 class Thread(TimeStampedModel):
@@ -45,7 +45,7 @@ class Thread(TimeStampedModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("apps.main:thread_detail", kwargs={"pk": self.pk})
+        return reverse("main:thread_detail", kwargs={"pk": self.pk})
 
 
 class Post(TimeStampedModel):

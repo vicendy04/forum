@@ -39,8 +39,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # My apps
-    "apps.main",
-    "apps.accounts",
+    "main",
+    "accounts",
     # Third party apps.
     "django_bootstrap5",
     "crispy_forms",
@@ -149,5 +149,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # My settings.
 
-LOGIN_REDIRECT_URL = "apps.main:category_list"
-LOGOUT_REDIRECT_URL = "apps.main:category_list"
+LOGIN_REDIRECT_URL = "main:category_list"
+LOGOUT_REDIRECT_URL = "main:category_list"

@@ -63,7 +63,7 @@ class PostCreateView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy(
-            "apps.main:thread_detail",
+            "main:thread_detail",
             kwargs={"pk": self.kwargs["thread_id"]},
         )
 
@@ -77,4 +77,4 @@ class ThreadCreateView(CreateView):
 
     # Sử dụng get_success_url thay cho get_absolute_url trong models
     # def get_success_url(self):
-    #     return reverse_lazy("apps.main:thread_detail", kwargs={"pk": self.object.pk})
+    #     return reverse_lazy("main:thread_detail", kwargs={"pk": self.object.pk})

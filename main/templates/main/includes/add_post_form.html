@@ -3,7 +3,7 @@
 <div class="card mt-3">
     <div class="card-body">
         <h5 class="card-title">Thêm bình luận</h5>
-        <form method="post" action="{% url 'apps.main:post_create' thread.id %}">
+        <form method="post" action="{% url 'main:post_create' thread.id %}">
             {% csrf_token %}
             <!-- tên form lấy trong context của views trả về -->
             {% crispy form %}

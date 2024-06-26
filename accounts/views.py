@@ -4,6 +4,7 @@ from django.views.generic.edit import CreateView
 
 from .forms import UserRegisterForm
 
+
 # Create your views here.
 
 
@@ -15,4 +16,4 @@ class UserRegisterView(CreateView):
     template_name = "registration/register.html"
 
     def get_success_url(self):
-        return reverse_lazy("apps.main:category_list")
+        return reverse_lazy("main:category_list")
