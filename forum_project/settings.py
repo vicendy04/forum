@@ -38,6 +38,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # My apps
+    "main",
+    "accounts",
+    "users.apps.UsersConfig",
+    # Third party apps.
+    "django_bootstrap5",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    # Default apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,6 +54,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+# Docs: https://github.com/django-crispy-forms/crispy-bootstrap5
+# Configuration for crispy-forms
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -132,3 +147,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# My settings.
+
+LOGIN_REDIRECT_URL = "main:category_list"
+LOGOUT_REDIRECT_URL = "main:category_list"
+
+# AUTH_USER_MODEL = "auth.User"
+AUTH_USER_MODEL = "users.User"
