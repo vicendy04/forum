@@ -10,18 +10,19 @@
     </div>
 
     <div class="list-group">
-        {% for post in posts %}
+        {% for post in posts_per_page %}
         <div class="list-group-item">
             <h5 class="mb-1">{{ post.created_at|date:"F d, Y H:i" }}</h5>
             <p class="mb-1">{{ post.content }}</p>
         </div>
         {% empty %}
         <div class="alert alert-warning" role="alert">
-            No posts have been added yet.
+            Thread này chưa có comment nào.
         </div>
         {% endfor %}
     </div>
 
+    {% include 'main/includes/pagination.html' with page_obj=posts_per_page %}
     {% include 'main/includes/add_post_form.html' %}
 
 </div>

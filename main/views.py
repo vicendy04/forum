@@ -1,5 +1,8 @@
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
+
 from .models import Category, Thread, Post
 from .forms import ThreadForm, PostForm
 
@@ -40,8 +43,21 @@ class ThreadDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         thread = self.object
-        posts = thread.posts.order_by("-created_at")
-        context["posts"] = posts
+        posts = thread.posts.order_by("created_at")
+
+        # Phân trang các post
+        paginator = Paginator(posts, 5)
+        page_number = self.request.GET.get("page")
+
+        try:
+            posts_per_page = paginator.page(page_number)
+        except PageNotAnInteger:
+            posts_per_page = paginator.page(1)
+        except EmptyPage:
+            posts_per_page = paginator.page(paginator.num_pages)
+
+        context["posts_per_page"] = posts_per_page
+        context["paginator"] = paginator
         # Render form trong template với tên form là form
         context["form"] = PostForm()
         return context
@@ -57,15 +73,14 @@ class PostCreateView(CreateView):
     # Làm thêm vài thứ để xác thực trước khi lưu
     def form_valid(self, form):
         # Lấy thread_id từ url kwargs
-        thread_id = self.kwargs["thread_id"]
-        form.instance.thread_id = thread_id
+        slug = self.kwargs["slug"]
+        thread = get_object_or_404(Thread, slug=slug)
+        form.instance.thread_id = thread.id
         return super().form_valid(form)
 
-    def get_success_url(self):
-        return reverse_lazy(
-            "main:thread_detail",
-            kwargs={"pk": self.kwargs["thread_id"]},
-        )
+    # Sử dụng get_success_url thay cho get_absolute_url trong model
+    # def get_success_url(self):
+    #     pass
 
 
 class ThreadCreateView(CreateView):
@@ -77,4 +92,4 @@ class ThreadCreateView(CreateView):
 
     # Sử dụng get_success_url thay cho get_absolute_url trong models
     # def get_success_url(self):
-    #     return reverse_lazy("main:thread_detail", kwargs={"pk": self.object.pk})
+    #     pass

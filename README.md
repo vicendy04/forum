@@ -14,5 +14,5 @@ This project aims to create a simple forum where users can discuss various topic
 - [x] Implement templates and forms for creating Thread and Post (comment)
 - [x] Use default auth urls
 - [x] Create a custom User model
-- [ ] Add pagination
-- [ ] Add slug functionality
+- [x] Add slug functionality
+- [x] Add pagination
