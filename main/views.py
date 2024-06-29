@@ -3,38 +3,38 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
-from .models import Category, Thread, Post
-from .forms import ThreadForm, PostForm
+from .models import Thread, Forum, Comment
+from .forms import ThreadForm, CommentForm
 
 
 # Create your views here.
-class CategoryListView(ListView):
-    """Hiện mục category"""
+class ForumListView(ListView):
+    """Hiện các Forum hiện có"""
 
-    model = Category
+    model = Forum
     template_name = "main/index.html"
-    context_object_name = "categories"
+    context_object_name = "forums"
 
 
-class CategoryDetailView(DetailView):
-    """Hiện các thread của category đó"""
+class ForumDetailView(DetailView):
+    """Hiện các thread của Forum đó"""
 
-    model = Category
-    template_name = "main/category_detail.html"
-    context_object_name = "category"
+    model = Forum
+    template_name = "main/forum_detail.html"
+    context_object_name = "forum"
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the entries
-        category = self.object
-        threads = category.threads.order_by("-created_at")
+        forum = self.object
+        threads = forum.threads.order_by("-created_at")
         context["threads"] = threads
         return context
 
 
 class ThreadDetailView(DetailView):
-    """Hiện các post (comment) trong thread đó"""
+    """Hiện các comment trong thread đó"""
 
     model = Thread
     template_name = "main/thread_detail.html"
@@ -43,32 +43,32 @@ class ThreadDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         thread = self.object
-        posts = thread.posts.order_by("created_at")
+        comments = thread.comments.order_by("created_at")
 
         # Phân trang các post
-        paginator = Paginator(posts, 5)
+        paginator = Paginator(comments, 5)
         page_number = self.request.GET.get("page")
 
         try:
-            posts_per_page = paginator.page(page_number)
+            comments_per_page = paginator.page(page_number)
         except PageNotAnInteger:
-            posts_per_page = paginator.page(1)
+            comments_per_page = paginator.page(1)
         except EmptyPage:
-            posts_per_page = paginator.page(paginator.num_pages)
+            comments_per_page = paginator.page(paginator.num_pages)
 
-        context["posts_per_page"] = posts_per_page
+        context["comments_per_page"] = comments_per_page
         context["paginator"] = paginator
         # Render form trong template với tên form là form
-        context["form"] = PostForm()
+        context["form"] = CommentForm()
         return context
 
 
 # Chỗ này cần refactor
-class PostCreateView(CreateView):
+class CommentCreateView(CreateView):
     """Controller lưu form"""
 
-    model = Post
-    form_class = PostForm
+    model = Comment
+    form_class = CommentForm
 
     # Làm thêm vài thứ để xác thực trước khi lưu
     def form_valid(self, form):

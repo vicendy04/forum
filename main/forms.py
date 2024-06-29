@@ -1,5 +1,5 @@
 from django import forms
-from .models import Thread, Post
+from .models import Thread, Comment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
@@ -22,11 +22,11 @@ class ThreadForm(forms.ModelForm):
         self.helper.add_input(Submit("submit", "Tạo Thread"))
 
 
-class PostForm(forms.ModelForm):
-    """Form tạo mới Post"""
+class CommentForm(forms.ModelForm):
+    """Form tạo mới Comment"""
 
     class Meta:
-        model = Post
+        model = Comment
         fields = ["content"]
 
     def __init__(self, *args, **kwargs):

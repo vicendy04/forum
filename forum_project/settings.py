@@ -150,8 +150,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # My settings.
 
-LOGIN_REDIRECT_URL = "main:category_list"
-LOGOUT_REDIRECT_URL = "main:category_list"
+LOGIN_REDIRECT_URL = "main:forum_list"
+LOGOUT_REDIRECT_URL = "main:forum_list"
 
 # AUTH_USER_MODEL = "auth.User"
 AUTH_USER_MODEL = "users.User"

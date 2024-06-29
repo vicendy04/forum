@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="mt-4">
-    <h1 class="my-4">{{ category.name }}</h1>
-    <a href="{% url 'main:thread_create' category.id %}" class="btn btn-primary mb-4">
+    <h1 class="my-4">{{ forum.name }}</h1>
+    <a href="{% url 'main:thread_create' forum.slug%}" class="btn btn-primary mb-4">
         Tạo mới Thread
     </a>
     <div class="list-group">

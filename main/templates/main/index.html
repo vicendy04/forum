@@ -1,14 +1,14 @@
 {% extends 'main/base.html' %}
 {% block content %}
 <div class="mt-4">
-    <h1 class="my-4">Categories</h1>
+    <h1 class="my-4">Forums</h1>
     <div class="list-group">
-        {% for category in categories %}
-        <a href="{{ category.get_absolute_url }}" class="list-group-item list-group-item-action">
-            {{ category.name }}
+        {% for forum in forums %}
+        <a href="{{ forum.get_absolute_url }}" class="list-group-item list-group-item-action">
+            {{ forum.name }}
         </a>
         {% empty %}
-        <div class="alert alert-warning" role="alert">No categories have been added yet.</div>
+        <div class="alert alert-warning" role="alert">Chưa có diễn đàn nào được tạo.</div>
         {% endfor %}
     </div>
 </div>

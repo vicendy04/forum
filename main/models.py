@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-# sử dụng để tự động điền slug khi tạo Category hoặc Thread mới
+# sử dụng để tự động điền slug khi tạo Forum hoặc Thread mới
 from django.template.defaultfilters import slugify
 
 
@@ -12,31 +12,6 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Category(TimeStampedModel):
-    """Category chứa nhiều Thread"""
-
-    name = models.CharField(max_length=50)
-    description = models.TextField(blank=True, null=True)
-    slug = models.SlugField(default="", null=False)
-
-    class Meta:
-        verbose_name_plural = "categories"
-        db_table = "Category"
-
-    def __str__(self):
-        return self.name
-
-    # Tạo mẫu url chung
-    def get_absolute_url(self):
-        return reverse("main:category_detail", kwargs={"slug": self.slug})
-
-    # https://learndjango.com/tutorials/django-slug-tutorial
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super().save(*args, **kwargs)
 
 
 # Tạo một model mới thay vì đổi tên model cũ
@@ -56,7 +31,7 @@ class Forum(TimeStampedModel):
 
     # Tạo mẫu url chung
     def get_absolute_url(self):
-        return reverse("main:category_detail", kwargs={"slug": self.slug})
+        return reverse("main:forum_detail", kwargs={"slug": self.slug})
 
     # https://learndjango.com/tutorials/django-slug-tutorial
     def save(self, *args, **kwargs):
@@ -91,24 +66,6 @@ class Thread(TimeStampedModel):
         if not self.slug:
             self.slug = slugify(self.title)
         return super().save(*args, **kwargs)
-
-
-class Post(TimeStampedModel):
-    """Post đăng trong một Thread"""
-
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE, related_name="posts")
-    content = models.TextField()
-
-    class Meta:
-        verbose_name_plural = "posts"
-        db_table = "Post"
-
-    def __str__(self):
-        return self.content
-
-    # thông thường sẽ dùng để trả về page chi tiết của model đó
-    def get_absolute_url(self):
-        return reverse("main:thread_detail", kwargs={"slug": self.thread.slug})
 
 
 # Tạo một model mới thay vì đổi tên model cũ
