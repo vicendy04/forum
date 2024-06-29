@@ -9,9 +9,9 @@ class ThreadForm(forms.ModelForm):
 
     class Meta:
         model = Thread
-        fields = ["category", "title"]
+        fields = ["forum", "title"]
         labels = {
-            "category": "Category",
+            "forum": "Forum",
             "title": "Title",
         }
 
