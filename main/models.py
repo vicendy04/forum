@@ -14,13 +14,28 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
+class SlugifiedModel(models.Model):
+    slug = models.SlugField(default="", null=False)
+
+    class Meta:
+        abstract = True
+
+    # https://learndjango.com/tutorials/django-slug-tutorial
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.get_slug())
+        return super().save(*args, **kwargs)
+
+    def get_slug(self):
+        raise NotImplementedError("Chua ghi de get_slug()")
+
+
 # Tạo một model mới thay vì đổi tên model cũ
-class Forum(TimeStampedModel):
+class Forum(TimeStampedModel, SlugifiedModel):
     """Một Forum chứa nhiều Thread"""
 
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, null=True)
-    slug = models.SlugField(default="", null=False)
 
     class Meta:
         verbose_name_plural = "forums"
@@ -33,14 +48,11 @@ class Forum(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("main:forum_detail", kwargs={"slug": self.slug})
 
-    # https://learndjango.com/tutorials/django-slug-tutorial
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        return super().save(*args, **kwargs)
+    def get_slug(self):
+        return self.name
 
 
-class Thread(TimeStampedModel):
+class Thread(TimeStampedModel, SlugifiedModel):
     """Thread mà người dùng đang thảo luận"""
 
     forum = models.ForeignKey(
@@ -49,8 +61,6 @@ class Thread(TimeStampedModel):
         related_name="threads",
     )
     title = models.CharField(max_length=120)
-    # Add slug functionality
-    slug = models.SlugField(default="", null=False)
 
     class Meta:
         verbose_name_plural = "threads"
@@ -62,10 +72,8 @@ class Thread(TimeStampedModel):
     def get_absolute_url(self):
         return reverse("main:thread_detail", kwargs={"slug": self.slug})
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        return super().save(*args, **kwargs)
+    def get_slug(self):
+        return self.title
 
 
 # Tạo một model mới thay vì đổi tên model cũ
