@@ -28,7 +28,7 @@ class ForumDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the entries
         forum = self.object
-        threads = forum.threads.order_by("-created_at")
+        threads = forum.threads.order_by("-created_at").order_by("-is_pinned")
         context["threads"] = threads
         return context
 
@@ -89,7 +89,3 @@ class ThreadCreateView(CreateView):
     model = Thread
     form_class = ThreadForm
     template_name = "main/thread_form.html"
-
-    # Sử dụng get_success_url thay cho get_absolute_url trong models
-    # def get_success_url(self):
-    #     pass

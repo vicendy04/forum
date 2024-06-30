@@ -9,6 +9,10 @@ This project aims to create a simple forum where users can discuss various topic
 
 ### Todo list
 
+- [x] Pin thread
+- [ ] Lastest threads
+- [ ] 
+
 feature/core
 
 - [x] Do laundry

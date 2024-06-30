@@ -61,6 +61,7 @@ class Thread(TimeStampedModel, SlugifiedModel):
         related_name="threads",
     )
     title = models.CharField(max_length=120)
+    is_pinned = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "threads"
