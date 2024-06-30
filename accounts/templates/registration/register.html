@@ -3,9 +3,9 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<h2>Register</h2>
-<form method="post">
+  <h2>Register</h2>
+  <form method="post">
     {% csrf_token %}
     {% crispy form %}
-</form>
-{% endblock content %}
+  </form>
+{% endblock %}

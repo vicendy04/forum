@@ -14,6 +14,14 @@ class ForumListView(ListView):
     template_name = "main/index.html"
     context_object_name = "forums"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        latest_threads = Thread.objects.order_by("-created_at")[:5]
+
+        context["latest_threads"] = latest_threads
+        return context
+
 
 class ForumDetailView(DetailView):
     """Hiện các thread của Forum đó"""

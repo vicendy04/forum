@@ -1,43 +1,41 @@
 {% if paginator.num_pages > 1 %}
-<div class="mt-4 pagination d-flex justify-content-center">
+  <div class="mt-4 pagination d-flex justify-content-center">
     <ul class="pagination">
-        {% if page_obj.has_previous %}
+      {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page=1" aria-label="First">&laquo; Về đầu</a>
+          <a class="page-link" href="?page=1" aria-label="First">&laquo; Về đầu</a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">Trước</a>
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">Trước</a>
         </li>
-        {% else %}
+      {% else %}
         <li class="page-item disabled">
-            <span class="page-link">&laquo; Về đầu</span>
+          <span class="page-link">&laquo; Về đầu</span>
         </li>
         <li class="page-item disabled">
-            <span class="page-link">Trước</span>
+          <span class="page-link">Trước</span>
         </li>
-        {% endif %}
+      {% endif %}
 
-        <li class="page-item active" aria-current="page">
-            <span class="page-link">
-                Trang {{ page_obj.number }} trên {{ paginator.num_pages }}
-            </span>
-        </li>
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">Trang {{ page_obj.number }} trên {{ paginator.num_pages }}</span>
+      </li>
 
-        {% if page_obj.has_next %}
+      {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">Sau</a>
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">Sau</a>
         </li>
         <li class="page-item">
-            <a class="page-link" href="?page={{ paginator.num_pages }}" aria-label="Last">Về cuối &raquo;</a>
+          <a class="page-link" href="?page={{ paginator.num_pages }}" aria-label="Last">Về cuối &raquo;</a>
         </li>
-        {% else %}
+      {% else %}
         <li class="page-item disabled">
-            <span class="page-link">Sau</span>
+          <span class="page-link">Sau</span>
         </li>
         <li class="page-item disabled">
-            <span class="page-link">Về cuối &raquo;</span>
+          <span class="page-link">Về cuối &raquo;</span>
         </li>
-        {% endif %}
+      {% endif %}
     </ul>
-</div>
+  </div>
 {% endif %}
