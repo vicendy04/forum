@@ -7,8 +7,8 @@
         Tạo mới Thread
     </a>
     <div class="list-group">
-        {% if threads %}
-        {% for thread in threads %}
+        {% if threads_per_page %}
+        {% for thread in threads_per_page %}
         <a href="{{ thread.get_absolute_url }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between align-items-center">
                 <h5 class="mb-1">{{ thread.title }}</h5>
@@ -26,5 +26,6 @@
         </div>
         {% endif %}
     </div>
+    {% include 'main/includes/threads_pagination.html' with page_obj=threads_per_page %}
 </div>
 {% endblock content %}

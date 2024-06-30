@@ -12,7 +12,7 @@
     <div class="list-group">
         {% for comment in comments_per_page %}
         <div class="list-group-item">
-            <h5 class="mb-1">{{ comment.created_at|date:"F d, Y H:i" }}</h5>
+            <h5 class="mb-1">{{ comment.created_at|date:"F d, Y" }}</h5>
             <p class="mb-1">{{ comment.content }}</p>
         </div>
         {% empty %}
@@ -22,7 +22,7 @@
         {% endfor %}
     </div>
 
-    {% include 'main/includes/pagination.html' with page_obj=comments_per_page %}
+    {% include 'main/includes/comments_pagination.html' with page_obj=comments_per_page %}
     {% include 'main/includes/add_comment_form.html' %}
 
 </div>

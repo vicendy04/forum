@@ -1,8 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-
+from .helpers import paginate_queryset
 from .models import Thread, Forum, Comment
 from .forms import ThreadForm, CommentForm
 
@@ -26,10 +25,15 @@ class ForumDetailView(DetailView):
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the entries
+
         forum = self.object
-        threads = forum.threads.order_by("-created_at").order_by("-is_pinned")
-        context["threads"] = threads
+        threads = forum.threads.order_by("-is_pinned", "-created_at")
+
+        # Phân trang các thread
+        threads_per_page, paginator = paginate_queryset(self.request, threads, 10)
+
+        context["threads_per_page"] = threads_per_page
+        context["paginator"] = paginator
         return context
 
 
@@ -42,19 +46,12 @@ class ThreadDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         thread = self.object
         comments = thread.comments.order_by("created_at")
 
-        # Phân trang các post
-        paginator = Paginator(comments, 5)
-        page_number = self.request.GET.get("page")
-
-        try:
-            comments_per_page = paginator.page(page_number)
-        except PageNotAnInteger:
-            comments_per_page = paginator.page(1)
-        except EmptyPage:
-            comments_per_page = paginator.page(paginator.num_pages)
+        # Phân trang các comment
+        comments_per_page, paginator = paginate_queryset(self.request, comments, 5)
 
         context["comments_per_page"] = comments_per_page
         context["paginator"] = paginator
@@ -77,10 +74,6 @@ class CommentCreateView(CreateView):
         thread = get_object_or_404(Thread, slug=slug)
         form.instance.thread_id = thread.id
         return super().form_valid(form)
-
-    # Sử dụng get_success_url thay cho get_absolute_url trong model
-    # def get_success_url(self):
-    #     pass
 
 
 class ThreadCreateView(CreateView):
