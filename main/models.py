@@ -15,15 +15,14 @@ class TimeStampedModel(models.Model):
 
 
 class SlugifiedModel(models.Model):
-    slug = models.SlugField(default="", null=False)
+    slug = models.SlugField(null=False, unique=True)
 
     class Meta:
         abstract = True
 
     # https://learndjango.com/tutorials/django-slug-tutorial
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.get_slug())
+        self.slug = slugify(self.get_slug())
         return super().save(*args, **kwargs)
 
     def get_slug(self):
