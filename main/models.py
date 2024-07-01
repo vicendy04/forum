@@ -1,8 +1,8 @@
 from django.db import models
 from django.urls import reverse
-
-# sử dụng để tự động điền slug khi tạo Forum hoặc Thread mới
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import (
+    slugify,
+)  # sử dụng để tự động điền slug khi tạo Forum hoặc Thread mới
 
 
 # Create your models here.

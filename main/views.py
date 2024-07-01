@@ -95,3 +95,12 @@ class ThreadCreateView(CreateView):
     model = Thread
     form_class = ThreadForm
     template_name = "main/thread_form.html"
+
+    def get_initial(self):
+        """Return the initial data to use for forms on this view."""
+        initial = super().get_initial()
+        # Sử dụng để điền trước thông tin vào form dựa vào url
+        form_slug = self.kwargs.get("slug")
+        forum = get_object_or_404(Forum, slug=form_slug)
+        initial["forum"] = forum
+        return initial

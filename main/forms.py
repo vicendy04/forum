@@ -1,7 +1,9 @@
-from django import forms
-from .models import Thread, Comment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
+from django import forms
+
+from .models import Thread, Comment
 
 
 class ThreadForm(forms.ModelForm):
@@ -10,9 +12,10 @@ class ThreadForm(forms.ModelForm):
     class Meta:
         model = Thread
         fields = ["forum", "title"]
+        # tên để hiển thị trên giao diện
         labels = {
-            "forum": "Forum",
-            "title": "Title",
+            "forum": "Diễn đàn",
+            "title": "Tiêu đề",
         }
 
     def __init__(self, *args, **kwargs):
@@ -28,6 +31,9 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ["content"]
+        labels = {
+            "content": "Bình luận",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

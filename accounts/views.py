@@ -1,5 +1,4 @@
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView
 from django.contrib.auth import get_user_model
 
