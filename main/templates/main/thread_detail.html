@@ -1,6 +1,18 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
+  <!-- Breadcrumb -->
+  <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'main:forum_list' %}">Forum</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'main:forum_detail' thread.forum.slug %}">{{ thread.forum.name }}</a>
+      </li>
+    </ol>
+  </nav>
+
   <div class="mt-4">
     <div class="card mb-3">
       <div class="card-body">

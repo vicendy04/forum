@@ -52,6 +52,11 @@ class ThreadDetailView(DetailView):
     template_name = "main/thread_detail.html"
     context_object_name = "thread"
 
+    def get_queryset(self):
+        # lấy trước để dùng cho breadcrumb
+        queryset = super().get_queryset().select_related("forum")
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 

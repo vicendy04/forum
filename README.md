@@ -13,6 +13,7 @@ feature/additional-features
 
 - [x] Pin thread
 - [x] Latest threads
+- [x] Add breadcrumb navigation
 
 feature/core
 
