@@ -30,6 +30,8 @@ feature/core
 - [x] Add slug functionality
 - [x] Add pagination
 
+- [x] Create a Profile model
+
 refactor/change-model-name
 
 - [x] Create new model instead of renaming directly
