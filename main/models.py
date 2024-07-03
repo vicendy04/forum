@@ -51,6 +51,17 @@ class Forum(TimeStampedModel, SlugifiedModel):
         return self.name
 
 
+class ThreadPrefix(SlugifiedModel):
+    name = models.CharField(max_length=50, unique=True)
+    color = models.CharField(max_length=7, default="#3BB143")
+
+    def __str__(self):
+        return self.name
+
+    def get_slug(self):
+        return self.name
+
+
 class Thread(TimeStampedModel, SlugifiedModel):
     """Thread mà người dùng đang thảo luận"""
 
@@ -61,6 +72,7 @@ class Thread(TimeStampedModel, SlugifiedModel):
     )
     title = models.CharField(max_length=120)
     is_pinned = models.BooleanField(default=False)
+    prefix = models.ForeignKey(ThreadPrefix, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         verbose_name_plural = "threads"

@@ -11,10 +11,11 @@ class ThreadForm(forms.ModelForm):
 
     class Meta:
         model = Thread
-        fields = ["forum", "title"]
+        fields = ["forum", "prefix", "title"]
         # tên để hiển thị trên giao diện
         labels = {
             "forum": "Diễn đàn",
+            "prefix": "Loại thread",
             "title": "Tiêu đề",
         }
 

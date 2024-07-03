@@ -9,6 +9,11 @@ This project aims to create a simple forum where users can discuss various topic
 
 ### Todo list
 
+feature/thread-prefix
+
+- [x] Add ThreadPrefix model with name, slug, color attributes 
+- [x] Now each thread is come with a thread type
+
 feature/additional-features
 
 - [x] Pin thread

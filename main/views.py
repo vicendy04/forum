@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
 
 from .helpers import paginate_queryset
-from .models import Thread, Forum, Comment
+from .models import Thread, Forum, Comment, ThreadPrefix
 from .forms import ThreadForm, CommentForm
 
 
@@ -99,8 +99,14 @@ class ThreadCreateView(CreateView):
     def get_initial(self):
         """Return the initial data to use for forms on this view."""
         initial = super().get_initial()
+
+        # Thiết lập giá trị mặc định cho trường prefix
+        no_prefix = ThreadPrefix.objects.get(name="No Prefix")
+        initial["prefix"] = no_prefix
+
         # Sử dụng để điền trước thông tin vào form dựa vào url
         form_slug = self.kwargs.get("slug")
         forum = get_object_or_404(Forum, slug=form_slug)
         initial["forum"] = forum
+
         return initial

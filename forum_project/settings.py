@@ -38,14 +38,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # My apps
-    "main",
-    "accounts",
-    "users.apps.UsersConfig",
-    # Third party apps.
-    "django_bootstrap5",
-    "crispy_forms",
-    "crispy_bootstrap5",
     # Default apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -53,6 +45,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third party apps.
+    "django_bootstrap5",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    # My apps
+    "main",
+    "accounts",
+    "users",
 ]
 
 # Docs: https://github.com/django-crispy-forms/crispy-bootstrap5
