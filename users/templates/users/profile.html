@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="mb-4">Profile</h2>
+    {% comment %}enctype="multipart/form-data" helps saving image data.{% endcomment %}
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card">
+        <div class="card-header bg-primary text-white">Chi tiết profile</div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="mb-3">{{ user_form.email|as_crispy_field }}</div>
+              <div class="mb-3">{{ profile_form.display_name|as_crispy_field }}</div>
+              <div class="mb-3">{{ profile_form.date_of_birth|as_crispy_field }}</div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">{{ profile_form.bio|as_crispy_field }}</div>
+              <div class="mb-3">{{ profile_form.avatar|as_crispy_field }}</div>
+            </div>
+          </div>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+            <button type="submit" class="btn btn-success">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

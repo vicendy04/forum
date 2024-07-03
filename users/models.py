@@ -11,7 +11,7 @@ class User(AbstractUser):  # <-- you can change me
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    display_name = models.TextField()
+    display_name = models.CharField(max_length=32)
     date_of_birth = models.DateField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(

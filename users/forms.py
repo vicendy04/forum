@@ -11,14 +11,31 @@ from users.models import Profile
 class UserRegisterForm(UserCreationForm):
     """Form được dùng để render trong trang đăng ký"""
 
+    display_name = forms.CharField(label="Tên hiển thị", max_length=255)
+
+    date_of_birth = forms.DateField(
+        label="Ngày sinh",
+        required=False,
+        widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
+        input_formats=["%Y-%m-%d"],
+    )
+
     class Meta:
         model = get_user_model()
-        fields = (
+        #
+        # Ảnh hưởng đến thứ tự xuất hiện trong form
+        #
+        fields = [
+            # Model field
             "username",
-            # Auth field
+            # Profile field
+            "display_name",
+            # UserCreationForm field
             "password1",
             "password2",
-        )
+            # Profile field
+            "date_of_birth",
+        ]
         labels = {
             "username": "Tên người dùng",
         }
@@ -26,8 +43,7 @@ class UserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # These are not fields of the model, in this case get_user_model()
-        # So need to custom here
+        # Trường không phải của model sẽ xử lý ở đây
         self.fields["password1"].label = "Mật khẩu"
         self.fields["password2"].label = "Xác nhận mật khẩu"
 
@@ -38,7 +54,12 @@ class UserRegisterForm(UserCreationForm):
 
 # Create a UserUpdateForm to update
 class UserUpdateForm(forms.ModelForm):
-    pass
+    class Meta:
+        model = get_user_model()
+        fields = ["email"]
+        labels = {
+            "email": "Email",
+        }
 
 
 # Create a ProfileUpdateForm to update image.
@@ -46,3 +67,7 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["display_name", "date_of_birth", "bio", "avatar"]
+        labels = {
+            "display_name": "Tên người dùng",
+            "date_of_birth": "Ngày sinh",
+        }

@@ -9,6 +9,12 @@ This project aims to create a simple forum where users can discuss various topic
 
 ### Todo list
 
+feature/profile
+
+- [x] Create a Profile model
+- [x] Create user profile automatically when user register
+- [x] Profile view/update functionality
+
 feature/thread-prefix
 
 - [x] Add ThreadPrefix model with name, slug, color attributes 
@@ -29,9 +35,6 @@ feature/core
 - [x] Create a custom User model
 - [x] Add slug functionality
 - [x] Add pagination
-
-- [x] Create a Profile model
-- [ ] 
 
 refactor/change-model-name
 
