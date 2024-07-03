@@ -31,6 +31,7 @@ feature/core
 - [x] Add pagination
 
 - [x] Create a Profile model
+- [ ] 
 
 refactor/change-model-name
 

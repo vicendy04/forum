@@ -22,9 +22,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("accounts.urls")),
     path("", include("main.urls")),
+    path("accounts/", include("accounts.urls")),
+    path("users/", include("users.urls")),
 ]
 
+# Only add this when we are in debug mode.
+# Serve user-uploaded media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
