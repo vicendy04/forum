@@ -8,4 +8,4 @@ class User(AbstractUser):  # <-- you can change me
     date_of_birth = models.DateField(blank=True, null=True)
 
     class Meta:
-        db_table = "auth_user"  # <-- you can change me
+        db_table = "user"  # <-- you can change me

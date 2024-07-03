@@ -37,8 +37,7 @@ class Forum(TimeStampedModel, SlugifiedModel):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = "forums"
-        db_table = "Forum"
+        db_table = "forum"
 
     def __str__(self):
         return self.name
@@ -53,7 +52,11 @@ class Forum(TimeStampedModel, SlugifiedModel):
 
 class ThreadPrefix(SlugifiedModel):
     name = models.CharField(max_length=50, unique=True)
-    color = models.CharField(max_length=7, default="#3BB143")
+    color = models.CharField(max_length=7, default="#2386CC")
+
+    class Meta:
+        verbose_name_plural = "thread prefixes"
+        db_table = "thread_prefix"
 
     def __str__(self):
         return self.name
@@ -70,13 +73,14 @@ class Thread(TimeStampedModel, SlugifiedModel):
         on_delete=models.CASCADE,
         related_name="threads",
     )
+    prefix = models.ForeignKey(
+        ThreadPrefix, on_delete=models.SET_NULL, null=True, related_name="threads"
+    )
     title = models.CharField(max_length=120)
     is_pinned = models.BooleanField(default=False)
-    prefix = models.ForeignKey(ThreadPrefix, on_delete=models.SET_NULL, null=True)
 
     class Meta:
-        verbose_name_plural = "threads"
-        db_table = "Thread"
+        db_table = "thread"
 
     def __str__(self):
         return self.title
@@ -98,8 +102,7 @@ class Comment(TimeStampedModel):
     content = models.TextField()
 
     class Meta:
-        verbose_name_plural = "comments"
-        db_table = "Comment"
+        db_table = "comment"
 
     def __str__(self):
         return self.content
