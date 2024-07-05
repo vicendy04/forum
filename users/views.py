@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
+from django.contrib import messages
 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from .models import Profile
@@ -43,7 +44,13 @@ def view_or_update_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            return redirect("users:profile")
+            messages.success(request, "Cập nhật profile thành công")
+        else:
+            messages.error(request, "Lỗi không thể cập nhật profile")
+
+        # fix khi reload page không gửi lại post
+        return redirect("users:profile")
+
     else:
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)

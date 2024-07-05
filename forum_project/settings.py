@@ -158,3 +158,15 @@ AUTH_USER_MODEL = "users.User"
 
 MEDIA_URL = "media/"  # Public URL
 MEDIA_ROOT = BASE_DIR / "media"  # Thư mục lưu ảnh
+
+# https://stackoverflow.com/questions/67044129/django-messages-bootstrap-toast-how-to-make-it-work
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "info",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
+}

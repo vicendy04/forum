@@ -15,16 +15,13 @@ feature/profile
 - [x] Create user profile automatically when user register
 - [x] Profile view/update functionality
 
-feature/thread-prefix
-
-- [x] Add ThreadPrefix model with name, slug, color attributes 
-- [x] Now each thread is come with a thread type
-
 feature/additional-features
 
 - [x] Pin thread
 - [x] Latest threads
 - [x] Add breadcrumb navigation
+- [x] Now each thread is come with a thread type
+- [ ] Use the messages framework to display notifications
 
 feature/core
 
