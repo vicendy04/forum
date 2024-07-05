@@ -1,5 +1,7 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView
+from django.template.loader import render_to_string
 
 from .helpers import paginate_queryset
 from .models import Thread, Forum, Comment, ThreadPrefix
@@ -86,7 +88,13 @@ class CommentCreateView(CreateView):
         slug = self.kwargs["slug"]
         thread = get_object_or_404(Thread, slug=slug)
         form.instance.thread_id = thread.id
-        return super().form_valid(form)
+        comment = form.save()
+
+        # Sử dụng htmx để cập nhật phần bình luận không cần reload
+        if self.request.htmx:
+            context = {"comment": comment}
+            html_content = render_to_string("main/includes/comment_list.html", context)
+            return HttpResponse(html_content)
 
 
 class ThreadCreateView(CreateView):

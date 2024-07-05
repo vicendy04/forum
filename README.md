@@ -9,6 +9,11 @@ This project aims to create a simple forum where users can discuss various topic
 
 ### Todo list
 
+feature/htmx-integration
+
+- [x] Install django-htmx
+- [x] Perform the post comment action without reloading the whole page
+
 feature/profile
 
 - [x] Create a Profile model
@@ -21,7 +26,7 @@ feature/additional-features
 - [x] Latest threads
 - [x] Add breadcrumb navigation
 - [x] Now each thread is come with a thread type
-- [ ] Use the messages framework to display notifications
+- [x] Use the messages framework to display notifications
 
 feature/core
 

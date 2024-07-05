@@ -3,7 +3,7 @@
 <div class="card mt-3">
   <div class="card-body">
     <h5 class="card-title">Thêm bình luận</h5>
-    <form method="post" action="{% url 'main:comment_create' thread.slug %}">
+    <form method="post" hx-post="{% url 'main:comment_create' thread.slug %}" hx-trigger="submit" hx-swap="beforeend" hx-target="#comment-list">
       {% csrf_token %}
       <!-- tên form lấy trong context của views trả về -->
       {% crispy form %}
