@@ -38,7 +38,7 @@ feature/core
 - [x] Add slug functionality
 - [x] Add pagination
 
-refactor/change-model-name
+refactor/refactor
 
 - [x] Create new model instead of renaming directly
-- [x] Update references
+- [ ] Clean up views

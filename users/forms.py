@@ -17,7 +17,6 @@ class UserRegisterForm(UserCreationForm):
         label="Ngày sinh",
         required=False,
         widget=forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
-        input_formats=["%Y-%m-%d"],
     )
 
     class Meta:
@@ -62,7 +61,7 @@ class UserUpdateForm(forms.ModelForm):
         }
 
 
-# Create a ProfileUpdateForm to update image.
+# Create a ProfileUpdateForm to update
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
@@ -70,4 +69,7 @@ class ProfileUpdateForm(forms.ModelForm):
         labels = {
             "display_name": "Tên người dùng",
             "date_of_birth": "Ngày sinh",
+        }
+        widgets = {
+            "date_of_birth": forms.DateInput(attrs={"type": "date"}),
         }

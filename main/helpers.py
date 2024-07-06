@@ -5,7 +5,7 @@ Phục vụ cho mục đích trước mắt là tránh vi phạm don't repeat yo
 from django.core.paginator import Paginator
 
 
-def paginate_queryset(request, objects_list, paginate_by):
+def get_paged_list(request, objects_list, paginate_by):
     """Hàm giúp phân trang"""
 
     paginator = Paginator(objects_list, paginate_by)

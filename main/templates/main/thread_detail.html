@@ -9,7 +9,7 @@
           <a href="{% url 'main:forum_list' %}">Forum</a>
         </li>
         <li class="breadcrumb-item">
-          <a href="{% url 'main:forum_detail' thread.forum.slug %}">{{ thread.forum.name }}</a>
+          <a href="{% url 'main:forum_detail' forum.slug %}">{{ forum.name }}</a>
         </li>
       </ol>
     </nav>

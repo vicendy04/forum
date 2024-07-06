@@ -1,7 +1,7 @@
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect, render
 from django.contrib import messages
 
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
@@ -20,14 +20,11 @@ class UserRegisterView(CreateView):
 
     def form_valid(self, form):
         new_user = form.save()
-
-        # Create the user profile
         Profile.objects.create(
             user=new_user,
             display_name=form.cleaned_data.get("display_name"),
             date_of_birth=form.cleaned_data.get("date_of_birth"),
-        )
-
+        )  # Create the user profile
         return redirect(self.get_success_url())
 
     def get_success_url(self):
