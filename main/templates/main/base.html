@@ -18,35 +18,35 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="{% url 'main:forum_list' %}">Logo</a>
+        <a class="navbar-brand" href="{% url 'main:forum_list' %}">Home</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'main:forum_list' %}">Home</a>
-            </li>
+          <ul class="navbar-nav ms-auto align-items-center">
             {% if user.is_authenticated %}
-              <!-- If the user is authenticated, show different links -->
+              <!-- Hiển thị liên kết khi người dùng đã xác thực -->
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:profile' %}">Hello, {{ user.profile.display_name }}</a>
+                <img src="{{ user.profile.avatar_thumbnail.url }}" alt="Avatar" class="rounded-circle" width="32" height="32" />
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:profile' %}">Chào, {{ user.profile.display_name }}</a>
               </li>
               <li class="nav-item">
                 <form method="post" action="{% url 'accounts:logout' %}">
                   {% csrf_token %}
-                  <button type="submit" class="nav-link btn btn-link">Logout</button>
+                  <button type="submit" class="btn btn-link nav-link">Đăng xuất</button>
                 </form>
               </li>
             {% else %}
-              <!-- If the user is not authenticated, show login and register links -->
+              <!-- Hiển thị liên kết đăng nhập và đăng ký khi người dùng chưa xác thực -->
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                <a class="nav-link" href="{% url 'accounts:login' %}">Đăng nhập</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+                <a class="nav-link" href="{% url 'users:register' %}">Đăng ký</a>
               </li>
             {% endif %}
 
-            <!-- Add more navigation links as needed -->
+            <!-- Các liên kết điều hướng khác có thể được thêm vào đây -->
           </ul>
         </div>
       </div>

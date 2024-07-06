@@ -27,6 +27,7 @@ feature/additional-features
 - [x] Add breadcrumb navigation
 - [x] Now each thread is come with a thread type
 - [x] Use the messages framework to display notifications
+- [x] Display avatar
 
 feature/core
 

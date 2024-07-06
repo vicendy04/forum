@@ -1,3 +1,6 @@
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -16,6 +19,12 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(
         default="default.jpg", upload_to="profile_pics/%Y/%m/%d/", blank=True
+    )
+    avatar_thumbnail = ImageSpecField(
+        source="avatar",
+        processors=[ResizeToFill(460, 460)],
+        format="JPEG",
+        options={"quality": 60},
     )
 
     def __str__(self):
