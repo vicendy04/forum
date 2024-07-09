@@ -5,8 +5,8 @@
     <h1 class="mb-4">{{ forum.name }}</h1>
     <a href="{% url 'main:thread_create' forum.slug %}" class="btn btn-primary mt-3 mb-4">Tạo mới Thread</a>
     <div class="list-group">
-      {% if threads_per_page %}
-        {% for thread in threads_per_page %}
+      {% if page_obj.object_list %}
+        {% for thread in page_obj.object_list %}
           <a href="{{ thread.get_absolute_url }}" class="list-group-item list-group-item-action">
             <div class="d-flex w-100 justify-content-between align-items-center">
               <div class="d-flex align-items-center">
@@ -28,6 +28,6 @@
         <div class="alert alert-warning mt-3" role="alert">Chưa có thread nào.</div>
       {% endif %}
     </div>
-    {% include 'main/includes/thread_pagination.html' with page_obj=threads_per_page %}
+    {% include 'main/includes/thread_pagination.html' %}
   </div>
 {% endblock %}

@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import CreateView
+from django.views.decorators.http import require_POST
 
-from .helpers import get_paged_list
-from .models import Thread, Forum, Comment, ThreadPrefix
+from .helpers import get_paged_object
+from .models import Thread, Forum, ThreadPrefix
 from .forms import ThreadForm, CommentForm
 
 
@@ -22,75 +23,45 @@ def forum_list(request):
     return render(request, "main/index.html", context)
 
 
-class ForumDetailView(DetailView):
+def forum_detail(request, slug):
     """Hiện các thread của Forum đó"""
 
-    model = Forum
-    context_object_name = "forum"
+    forum = get_object_or_404(Forum.objects.all(), slug=slug)
+    threads = forum.threads.order_by("-is_pinned", "-created_at")
 
-    def get_queryset(self):
-        return super().get_queryset().prefetch_related("threads")
+    context = {"forum": forum}
+    context.update(get_paged_object(request, queryset=threads, paginate_by=5))
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        forum = self.object
-        threads = forum.threads.order_by("-is_pinned", "-created_at")
-        threads_per_page, paginator = get_paged_list(
-            self.request, threads, paginate_by=10
-        )
-
-        context["threads_per_page"] = threads_per_page
-        context["paginator"] = paginator
-        return context
+    return render(request, "main/forum_detail.html", context)
 
 
-class ThreadDetailView(DetailView):
+def thread_detail(request, slug):
     """Hiện các comment trong thread đó"""
 
-    model = Thread
-    context_object_name = "thread"
+    thread = get_object_or_404(Thread.objects.all(), slug=slug)
+    comments = thread.comments.order_by("created_at")
 
-    def get_queryset(self):
-        return (
-            super().get_queryset().select_related("forum").prefetch_related("comments")
-        )
+    context = {"forum": thread.forum, "thread": thread, "form": CommentForm()}
+    context.update(get_paged_object(request, queryset=comments, paginate_by=5))
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        thread = self.object
-        comments = thread.comments.order_by("created_at")
-        comments_per_page, paginator = get_paged_list(
-            self.request, comments, paginate_by=5
-        )
-
-        context["forum"] = thread.forum
-        context["comments_per_page"] = comments_per_page
-        context["paginator"] = paginator
-        context["form"] = CommentForm()
-        return context
+    return render(request, "main/thread_detail.html", context)
 
 
-class CommentCreateView(CreateView):
-    """Controller lưu form"""
+@require_POST
+def add_comment(request, slug):
+    # Sử dụng htmx để cập nhật phần bình luận không cần reload
+    if request.htmx:
+        form = CommentForm(request.POST)
 
-    model = Comment
-    form_class = CommentForm
+        if form.is_valid():
+            thread = get_object_or_404(Thread, slug=slug)
+            form.instance.thread = thread
+            comment = form.save()
 
-    # Làm thêm vài thứ để xác thực trước khi lưu
-    def form_valid(self, form):
-        # Lấy thread_id từ url kwargs
-        thread = get_object_or_404(Thread, slug=self.kwargs["slug"])
-        form.instance.thread_id = thread.id
-        comment = form.save()
-
-        # Sử dụng htmx để cập nhật phần bình luận không cần reload
-        if self.request.htmx:
             html_content = render_to_string(
                 "main/includes/comment_list.html", {"comment": comment}
             )
-            return HttpResponse(html_content)
+            return HttpResponse(content=html_content)
 
 
 class ThreadCreateView(CreateView):

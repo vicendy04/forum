@@ -23,14 +23,15 @@
     </div>
 
     <div class="list-group" id="comment-list">
-      {% for comment in comments_per_page %}
+      {% for comment in page_obj.object_list %}
         {% include 'main/includes/comment_list.html' %}
       {% empty %}
         <div class="alert alert-warning" role="alert">Thread này chưa có comment nào.</div>
       {% endfor %}
     </div>
 
-    {% include 'main/includes/comment_pagination.html' with page_obj=comments_per_page %}
+    {% include 'main/includes/comment_pagination.html' %}
+
     {% include 'main/includes/comment_form.html' %}
   </div>
 {% endblock %}

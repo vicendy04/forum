@@ -43,3 +43,4 @@ refactor/refactor
 
 - [x] Create new model instead of renaming directly
 - [ ] Clean up views
+- [ ] Apply some patterns
