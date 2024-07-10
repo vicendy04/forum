@@ -31,7 +31,7 @@
                 <a class="nav-link" href="{% url 'users:profile' %}">Chào, {{ user.profile.display_name }}</a>
               </li>
               <li class="nav-item">
-                <form method="post" action="{% url 'accounts:logout' %}">
+                <form method="POST" action="{% url 'users:logout' %}">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-link nav-link">Đăng xuất</button>
                 </form>
@@ -39,7 +39,7 @@
             {% else %}
               <!-- Hiển thị liên kết đăng nhập và đăng ký khi người dùng chưa xác thực -->
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'accounts:login' %}">Đăng nhập</a>
+                <a class="nav-link" href="{% url 'users:login' %}">Đăng nhập</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'users:register' %}">Đăng ký</a>
