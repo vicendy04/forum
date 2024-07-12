@@ -4,8 +4,6 @@
 
 {% block content %}
   <h2>Đăng ký</h2>
-  <form method="post">
-    {% csrf_token %}
-    {% crispy form %}
-  </form>
+  {% csrf_token %}
+  {% crispy form %}
 {% endblock %}

@@ -6,7 +6,7 @@
   <div class="container mt-4">
     <h2 class="mb-4">Profile</h2>
     {% comment %}enctype="multipart/form-data" helps saving image data.{% endcomment %}
-    <form method="post" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="card">
         <div class="card-header bg-primary text-white">Chi tiết profile</div>

@@ -53,7 +53,6 @@ INSTALLED_APPS = [
     "imagekit",
     # My apps
     "main",
-    "accounts",
     "users",
 ]
 
