@@ -58,6 +58,7 @@ def add_comment(request, slug):
         if form.is_valid():
             thread = get_object_or_404(Thread, slug=slug)
             form.instance.thread = thread
+            form.instance.user = request.user
             comment = form.save()
 
             html_content = render_to_string(
@@ -83,3 +84,7 @@ class ThreadCreateView(CreateView):
         initial["forum"] = forum
         initial["prefix"] = no_prefix
         return initial
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)

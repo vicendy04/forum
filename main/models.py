@@ -2,6 +2,10 @@ from django.db import models
 from django.urls import reverse
 from django.template.defaultfilters import (
     slugify,
+)
+
+from forum_project import (
+    settings,
 )  # sử dụng để tự động điền slug khi tạo Forum hoặc Thread mới
 
 
@@ -68,6 +72,11 @@ class ThreadPrefix(SlugifiedModel):
 class Thread(TimeStampedModel, SlugifiedModel):
     """Thread mà người dùng đang thảo luận"""
 
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="threads_created",
+    )
     forum = models.ForeignKey(
         Forum,
         on_delete=models.CASCADE,
@@ -96,6 +105,11 @@ class Thread(TimeStampedModel, SlugifiedModel):
 class Comment(TimeStampedModel):
     """Comment đăng trong một Thread"""
 
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="comments_created",
+    )
     thread = models.ForeignKey(
         Thread, on_delete=models.CASCADE, related_name="comments"
     )

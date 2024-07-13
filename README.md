@@ -38,4 +38,5 @@ feature/core
 - [x] Use default auth URLs
 - [x] Customize User model
 - [x] Add slug and pagination
+- [x] Connect data to user who created 
 

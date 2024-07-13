@@ -28,7 +28,7 @@
                 <a href="{{ thread.get_absolute_url }}" class="text-decoration-none">{{ thread.title }}</a>
                 <small class="text-muted">{{ thread.created_at|date:'d M, Y' }}</small>
               </div>
-              <p class="mb-0 text-muted">by {{ thread.author.username }}</p>
+              <p class="mb-0 text-muted">by {{ thread.user.profile.display_name }}</p>
             </li>
           {% empty %}
             <div class="alert alert-warning mb-0" role="alert">Chưa có thread nào.</div>

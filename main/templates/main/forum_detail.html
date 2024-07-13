@@ -1,27 +1,43 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-  <h1 class="mb-4">{{ forum.name }}</h1>
+  <h1>{{ forum.name }}</h1>
   <a href="{% url 'main:thread_create' forum.slug %}" class="btn btn-primary mt-3 mb-4">Tạo mới Thread</a>
   <div class="list-group">
     {% if page_obj.object_list %}
       {% for thread in page_obj.object_list %}
-        <a href="{{ thread.get_absolute_url }}" class="list-group-item list-group-item-action">
+        <div class="list-group-item">
           <div class="d-flex w-100 justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              {% if thread.prefix %}
-                <span class="badge me-2" style="background-color: {{ thread.prefix.color }}">{{ thread.prefix.name }}</span>
-              {% else %}
-                <span class="badge bg-secondary">No Prefix</span>
-              {% endif %}
-              <h5 class="mb-1">{{ thread.title }}</h5>
+            <div class="d-flex">
+              <img src="{{ thread.user.profile.avatar_thumbnail.url }}" alt="{{ thread.user.profile.display_name }}" class="rounded-circle me-2 align-self-start" style="width: 32px; height: 32px;" />
+              <div>
+                <a href="{{ thread.get_absolute_url }}" class="text-decoration-none">
+                  <div class="d-flex align-items-center">
+                    {% if thread.prefix %}
+                      <span class="badge me-2" style="background-color: {{ thread.prefix.color }}">{{ thread.prefix.name }}</span>
+                    {% else %}
+                      <span class="badge bg-secondary me-2">No Prefix</span>
+                    {% endif %}
+                    {% if thread.is_pinned %}
+                      <h5 class="mb-1 text-warning">{{ thread.title }}</h5>
+                    {% else %}
+                      <h5 class="mb-1 text-primary">{{ thread.title }}</h5>
+                    {% endif %}
+                  </div>
+                </a>
+                <small class="text-muted">Bởi: {{ thread.user.profile.display_name }} · {{ thread.created_at|date:'d M, Y' }}</small>
+              </div>
             </div>
-            {% if thread.is_pinned %}
-              <span class="badge bg-warning">Đã ghim</span>
-            {% endif %}
+            <div class="text-end">
+              {% if thread.is_pinned %}
+                <span class="badge bg-warning">Đã ghim</span>
+              {% endif %}
+              <div class="mt-2">
+                <small class="text-muted">Replies: {{ thread.replies_count }} · Views: {{ thread.views_count }}</small>
+              </div>
+            </div>
           </div>
-          <small class="text-muted">Tạo vào: {{ thread.created_at|date:'d M, Y' }}</small>
-        </a>
+        </div>
       {% endfor %}
     {% else %}
       <div class="alert alert-warning mt-3" role="alert">Chưa có thread nào.</div>

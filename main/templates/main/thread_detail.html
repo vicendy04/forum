@@ -4,7 +4,7 @@
   <div class="container">
     <!-- Breadcrumb -->
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-      <ol class="breadcrumb">
+      <ol class="breadcrumb py-2 px-3 rounded">
         <li class="breadcrumb-item">
           <a href="{% url 'main:forum_list' %}" class="text-decoration-none">Diễn đàn</a>
         </li>
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="list-group" id="comment-list">
+    <div class="list-group mb-3" id="comment-list">
       {% for comment in page_obj.object_list %}
         {% include 'main/includes/comment_list.html' %}
       {% empty %}
