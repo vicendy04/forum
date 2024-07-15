@@ -12,6 +12,7 @@ htmx_urlpatterns = [
         views.add_comment,
         name="comment_create",
     ),
+    path("c/<int:pk>", views.like, name="like_comment"),
 ]
 
 urlpatterns = [

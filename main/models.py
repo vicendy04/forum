@@ -1,12 +1,12 @@
 from django.db import models
-from django.urls import reverse
 from django.template.defaultfilters import (
     slugify,
 )
+from django.urls import reverse
 
 from forum_project import (
     settings,
-)  # sử dụng để tự động điền slug khi tạo Forum hoặc Thread mới
+)
 
 
 # Create your models here.
@@ -19,7 +19,7 @@ class TimeStampedModel(models.Model):
 
 
 class SlugifiedModel(models.Model):
-    slug = models.SlugField(null=False, unique=True)
+    slug = models.SlugField(unique=True)
 
     class Meta:
         abstract = True
@@ -33,7 +33,6 @@ class SlugifiedModel(models.Model):
         raise NotImplementedError("Chua ghi de get_slug()")
 
 
-# Tạo một model mới thay vì đổi tên model cũ
 class Forum(TimeStampedModel, SlugifiedModel):
     """Một Forum chứa nhiều Thread"""
 
@@ -46,12 +45,12 @@ class Forum(TimeStampedModel, SlugifiedModel):
     def __str__(self):
         return self.name
 
+    def get_slug(self):
+        return self.name
+
     # Tạo mẫu url chung
     def get_absolute_url(self):
         return reverse("main:forum_detail", kwargs={"slug": self.slug})
-
-    def get_slug(self):
-        return self.name
 
 
 class ThreadPrefix(SlugifiedModel):
@@ -77,11 +76,7 @@ class Thread(TimeStampedModel, SlugifiedModel):
         on_delete=models.CASCADE,
         related_name="threads_created",
     )
-    forum = models.ForeignKey(
-        Forum,
-        on_delete=models.CASCADE,
-        related_name="threads",
-    )
+    forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name="threads")
     prefix = models.ForeignKey(
         ThreadPrefix, on_delete=models.SET_NULL, null=True, related_name="threads"
     )
@@ -94,14 +89,13 @@ class Thread(TimeStampedModel, SlugifiedModel):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):
-        return reverse("main:thread_detail", kwargs={"slug": self.slug})
-
     def get_slug(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse("main:thread_detail", kwargs={"slug": self.slug})
 
-# Tạo một model mới thay vì đổi tên model cũ
+
 class Comment(TimeStampedModel):
     """Comment đăng trong một Thread"""
 
@@ -114,6 +108,12 @@ class Comment(TimeStampedModel):
         Thread, on_delete=models.CASCADE, related_name="comments"
     )
     content = models.TextField()
+    # comment.users_like.all(), or get them from a user object, such as user.comments_liked.all()
+    users_like = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through="Like",
+        related_name="comments_liked",
+    )
 
     class Meta:
         db_table = "comment"
@@ -124,3 +124,20 @@ class Comment(TimeStampedModel):
     # thông thường sẽ dùng để trả về page chi tiết của model đó
     def get_absolute_url(self):
         return reverse("main:thread_detail", kwargs={"slug": self.thread.slug})
+
+    @property
+    def total_likes(self):
+        return self.users_like.count()
+
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "like"
+        unique_together = ("user", "comment")
+
+    def __str__(self):
+        return f"{self.user} likes {self.comment}"

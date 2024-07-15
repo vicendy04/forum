@@ -10,6 +10,9 @@
         <small class="text-muted">{{ comment.created_at|date:'d M, Y' }}</small>
       </div>
       <p class="mt-2 text-break">{{ comment.content|linebreaksbr }}</p>
+      <div class="mt-2 d-flex justify-content-end" id="like-count-{{ comment.id }}">
+        {% include 'main/includes/like.html' %}
+      </div>
     </div>
   </div>
 </div>

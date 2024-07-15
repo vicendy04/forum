@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 
 from .forms import CommentForm, ThreadForm
 from .helpers import get_paged_object
-from .models import Forum, Thread
+from .models import Forum, Like, Thread, Comment
 
 
 def forum_list(request):
@@ -78,3 +78,19 @@ def add_thread(request, slug):
         form = ThreadForm(forum_slug=slug)
 
     return render(request, "main/thread_form.html", {"form": form})
+
+
+def like(request, pk):
+    """Like button"""
+
+    if request.htmx:
+        comment = get_object_or_404(Comment, pk=pk)
+        this_user_liked = comment.users_like.filter(id=request.user.id).exists()
+
+        if this_user_liked:
+            comment.users_like.remove(request.user)
+        else:
+            comment.users_like.add(request.user)
+
+        html_content = render_to_string("main/includes/like.html", {"comment": comment})
+        return HttpResponse(content=html_content)

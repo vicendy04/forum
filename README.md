@@ -30,6 +30,7 @@ feature/additional-features
 - [x] Pin and categorize threads
 - [x] Display latest threads, user avatar
 - [x] Use messages framework for notifications
+- [x] Like/Dislike a comment with htmx
 
 feature/core
 
