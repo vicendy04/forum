@@ -1,14 +1,13 @@
-from django.shortcuts import get_object_or_404, render
-from django.template.loader import render_to_string
 from django.http import (
     HttpResponse,
 )
-from django.views.generic import CreateView
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 
+from .forms import CommentForm, ThreadForm
 from .helpers import get_paged_object
-from .models import Thread, Forum, ThreadPrefix
-from .forms import ThreadForm, CommentForm
+from .models import Forum, Thread
 
 
 def forum_list(request):
@@ -67,24 +66,15 @@ def add_comment(request, slug):
             return HttpResponse(content=html_content)
 
 
-class ThreadCreateView(CreateView):
+def add_thread(request, slug):
     """Controller xử lý form thêm mới thread"""
+    if request.method == "POST":
+        form = ThreadForm(request.POST)
+        if form.is_valid():
+            form.save(user=request.user)
 
-    model = Thread
-    form_class = ThreadForm
+            redirect(Thread, slug=slug)
+    else:
+        form = ThreadForm(forum_slug=slug)
 
-    def get_initial(self):
-        initial = super().get_initial()
-
-        # Sử dụng để điền trước thông tin vào form dựa vào url
-        forum = get_object_or_404(Forum, slug=self.kwargs["slug"])
-        # Thiết lập giá trị mặc định cho trường prefix
-        no_prefix = ThreadPrefix.objects.get(name="No Prefix")
-
-        initial["forum"] = forum
-        initial["prefix"] = no_prefix
-        return initial
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+    return render(request, "main/thread_form.html", {"form": form})

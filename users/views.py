@@ -1,18 +1,18 @@
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
+from crispy_forms.utils import render_crispy_form
 from django.contrib import messages
 from django.contrib.auth import login
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.template.context_processors import csrf
-
-from crispy_forms.utils import render_crispy_form
-from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
+from django.urls import reverse_lazy
 from django_htmx.http import HttpResponseClientRedirect
 
-
-from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
+from .forms import (
+    ProfileUserUpdateForm,
+    UserRegisterForm,
+)
 from .models import Profile
-
 
 # Create your views here.
 
@@ -44,28 +44,27 @@ def register(request):
             return HttpResponse(form_html)
 
 
-def view_or_update_profile(request):
+def view_or_update_profile1(request):
+    user = request.user
+    profile = user.profile
+
     if request.method == "POST":
-        user_form = UserUpdateForm(instance=request.user, data=request.POST)
-        profile_form = ProfileUpdateForm(
-            instance=request.user.profile, data=request.POST, files=request.FILES
+        form = ProfileUserUpdateForm(
+            data=request.POST, files=request.FILES, user=user, profile=profile
         )
 
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
+        if form.is_valid():
+            form.save()
             messages.success(request, "Cập nhật profile thành công")
         else:
             messages.error(request, "Lỗi không thể cập nhật profile")
 
         # fix khi reload page không gửi lại post
         return redirect("users:profile")
-
     else:
-        user_form = UserUpdateForm(instance=request.user)
-        profile_form = ProfileUpdateForm(instance=request.user.profile)
+        form = ProfileUserUpdateForm(user=user, profile=profile)
 
-    context = {"user_form": user_form, "profile_form": profile_form}
+    context = {"form": form}
     return render(request, "users/profile.html", context)
 
 

@@ -1,12 +1,9 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
-
-from users.models import Profile
 
 
 class UserRegisterForm(UserCreationForm):
@@ -64,25 +61,46 @@ class UserRegisterForm(UserCreationForm):
         return username
 
 
-# Create a UserUpdateForm to update
-class UserUpdateForm(forms.ModelForm):
-    class Meta:
-        model = get_user_model()
-        fields = ["email"]
-        labels = {"email": "Email"}
+# Create a ProfileUserUpdateForm to update
+class ProfileUserUpdateForm(forms.Form):
+    # Profile fields
+    display_name = forms.CharField(label="Tên người dùng", max_length=32)
+    # User fields
+    email = forms.EmailField(label="Email", required=False)
+    # Profile fields
+    bio = forms.CharField(label="Bio", widget=forms.Textarea, required=False)
+    date_of_birth = forms.DateField(
+        label="Ngày sinh",
+        widget=forms.DateInput(attrs={"type": "date"}),
+        required=False,
+    )
+    avatar = forms.ImageField(label="Avatar", required=False)
 
-    # def clean_email(self):
-    #     data = self.cleaned_data["email"]
-    #     qs = get_user_model().objects.exclude(id=self.instance.id).filter(email=data)
-    #     if qs.exists():
-    #         raise forms.ValidationError("Email đã được sử dụng.")
-    #     return data
+    def __init__(self, user, profile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        self.user = user
+        self.profile = profile
+        self.set_initial_fields()
 
-# Create a ProfileUpdateForm to update
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ["display_name", "date_of_birth", "bio", "avatar"]
-        labels = {"display_name": "Tên người dùng", "date_of_birth": "Ngày sinh"}
-        widgets = {"date_of_birth": forms.DateInput(attrs={"type": "date"})}
+    def save(self):
+        # Update user model
+        self.user.email = self.cleaned_data["email"]
+        self.user.save()
+
+        # Update profile model
+        self.profile.display_name = self.cleaned_data["display_name"]
+        self.profile.date_of_birth = self.cleaned_data["date_of_birth"]
+        self.profile.bio = self.cleaned_data["bio"]
+        avatar = self.cleaned_data["avatar"]
+        if avatar:
+            self.profile.avatar = avatar
+        self.profile.save()
+
+    def set_initial_fields(self):
+        """Đặt giá trị sẵn cho profile"""
+
+        self.fields["email"].initial = self.user.email
+        self.fields["display_name"].initial = self.profile.display_name
+        self.fields["date_of_birth"].initial = self.profile.date_of_birth
+        self.fields["bio"].initial = self.profile.bio

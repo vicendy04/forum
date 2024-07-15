@@ -4,7 +4,6 @@ from django.urls import path
 
 from . import views
 
-
 app_name = "main"
 
 htmx_urlpatterns = [
@@ -21,7 +20,7 @@ urlpatterns = [
     path("t/<slug:slug>/", views.thread_detail, name="thread_detail"),
     path(
         "f/<slug:slug>/new_thead/",
-        views.ThreadCreateView.as_view(),
+        views.add_thread,
         name="thread_create",
     ),
 ] + htmx_urlpatterns

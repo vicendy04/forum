@@ -10,6 +10,7 @@ urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     # path("register/", views.UserRegisterView.as_view(), name="register"),
     path("register/", views.register, name="register"),
-    path("profile/", views.view_or_update_profile, name="profile"),
+    # path("profile/", views.view_or_update_profile, name="profile"),
+    path("profile/", views.view_or_update_profile1, name="profile"),
     path("check_username", views.check_username, name="check_username"),
 ]
