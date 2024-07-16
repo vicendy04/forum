@@ -22,8 +22,9 @@ refactor/refactor
 
 feature/profile
 
-- [x] Create user profile automatically when user register
-- [x] Profile view/update functionality
+- [x] Create profile automatically when user register
+- [x] Can view someone's profile
+- [ ] Build a follow system
 
 feature/additional-features
 

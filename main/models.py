@@ -1,12 +1,8 @@
 from django.db import models
-from django.template.defaultfilters import (
-    slugify,
-)
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 
-from forum_project import (
-    settings,
-)
+from forum_project import settings
 
 
 # Create your models here.

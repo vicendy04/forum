@@ -1,17 +1,14 @@
 from crispy_forms.templatetags.crispy_forms_filters import as_crispy_field
 from crispy_forms.utils import render_crispy_form
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import get_user_model, login
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.context_processors import csrf
 from django.urls import reverse_lazy
 from django_htmx.http import HttpResponseClientRedirect
 
-from .forms import (
-    ProfileUserUpdateForm,
-    UserRegisterForm,
-)
+from .forms import ProfileUserUpdateForm, UserRegisterForm
 from .models import Profile
 
 # Create your views here.
@@ -44,7 +41,7 @@ def register(request):
             return HttpResponse(form_html)
 
 
-def view_or_update_profile1(request):
+def view_or_update_profile(request):
     user = request.user
     profile = user.profile
 
@@ -71,3 +68,21 @@ def view_or_update_profile1(request):
 def check_username(request):
     form = UserRegisterForm(request.GET)
     return HttpResponse(as_crispy_field(form["username"]))
+
+
+def user_profile(request, username):
+    user = get_object_or_404(get_user_model(), username=username)
+    profile = get_object_or_404(Profile, user=user)
+
+    threads = user.threads_created.all()
+    followers = user.followers.all()
+    following = user.following.all()
+
+    context = {
+        "user": user,
+        "profile": profile,
+        "threads": threads,
+        "followers": followers,
+        "following": following,
+    }
+    return render(request, "users/user_profile.html", context)

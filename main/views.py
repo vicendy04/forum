@@ -1,13 +1,11 @@
-from django.http import (
-    HttpResponse,
-)
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 
 from .forms import CommentForm, ThreadForm
 from .helpers import get_paged_object
-from .models import Forum, Like, Thread, Comment
+from .models import Comment, Forum, Thread
 
 
 def forum_list(request):
