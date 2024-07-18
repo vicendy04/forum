@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.context_processors import csrf
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 
@@ -78,17 +79,20 @@ def add_thread(request, slug):
     return render(request, "main/thread_form.html", {"form": form})
 
 
-def like(request, pk):
+def like_comment(request, pk):
     """Like button"""
 
-    if request.htmx:
+    if request.method == "POST" and request.htmx:
         comment = get_object_or_404(Comment, pk=pk)
-        this_user_liked = comment.users_like.filter(id=request.user.id).exists()
+        this_user_liked = comment.users_like.filter(
+            username=request.user.username
+        ).exists()
 
         if this_user_liked:
             comment.users_like.remove(request.user)
         else:
             comment.users_like.add(request.user)
-
-        html_content = render_to_string("main/includes/like.html", {"comment": comment})
+        context = {"comment": comment}
+        context.update(csrf(request))
+        html_content = render_to_string("main/includes/like_form.html", context)
         return HttpResponse(content=html_content)

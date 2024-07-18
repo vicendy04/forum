@@ -8,7 +8,7 @@ app_name = "main"
 
 htmx_urlpatterns = [
     path("t/<slug:slug>/add_comment/", views.add_comment, name="comment_create"),
-    path("c/<int:pk>", views.like, name="like_comment"),
+    path("like/<int:pk>", views.like_comment, name="like_comment"),
 ]
 
 urlpatterns = [

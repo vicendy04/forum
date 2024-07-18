@@ -8,6 +8,7 @@ app_name = "users"
 
 htmx_urlpatterns = [
     path("check_username", views.check_username, name="check_username"),
+    path("follow/<str:username>/", views.follow, name="follow"),
 ]
 
 urlpatterns = [

@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model, login
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.context_processors import csrf
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django_htmx.http import HttpResponseClientRedirect
 
@@ -71,18 +72,47 @@ def check_username(request):
 
 
 def user_profile(request, username):
-    user = get_object_or_404(get_user_model(), username=username)
-    profile = get_object_or_404(Profile, user=user)
+    user_to = get_object_or_404(get_user_model(), username=username)
+    profile = get_object_or_404(Profile, user=user_to)
 
-    threads = user.threads_created.all()
-    followers = user.followers.all()
-    following = user.following.all()
+    threads = user_to.threads_created.all()
+    followers = user_to.followers.all()
+    following = user_to.following.all()
 
     context = {
-        "user": user,
+        "user_from": request.user,
+        "user_to": user_to,
         "profile": profile,
         "threads": threads,
         "followers": followers,
         "following": following,
     }
     return render(request, "users/user_profile.html", context)
+
+
+def follow(request, username):
+    """Follow button"""
+
+    if request.method == "POST" and request.htmx:
+        user_from = request.user
+        user_to = get_object_or_404(get_user_model(), username=username)
+        this_user_followed = user_from.following.filter(
+            username=user_to.username
+        ).exists()
+
+        if this_user_followed:
+            user_from.following.remove(user_to)
+        else:
+            user_from.following.add(user_to)
+
+        followers = user_to.followers.all()
+
+        context = {
+            "user_from": user_from,
+            "user_to": user_to,
+            "followers": followers,
+        }
+        context.update(csrf(request))
+
+        html_content = render_to_string("users/includes/follow_form.html", context)
+        return HttpResponse(content=html_content)

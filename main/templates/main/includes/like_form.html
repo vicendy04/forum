@@ -1,5 +1,5 @@
 <!-- Button like -->
-<form hx-get="{% url 'main:like_comment' comment.id %}" hx-trigger="submit" hx-swap="outerHTML" ht-target="#like-count-{{ comment.id }}">
+<form hx-post="{% url 'main:like_comment' comment.id %}" hx-trigger="submit" hx-swap="outerHTML" ht-target="#like-count-{{ comment.id }}">
   {% csrf_token %}
   <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-hand-thumbs-up"></i> Like <span>{{ comment.total_likes }}</span></button>
 </form>

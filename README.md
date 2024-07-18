@@ -24,7 +24,7 @@ feature/profile
 
 - [x] Create profile automatically when user register
 - [x] Can view someone's profile
-- [ ] Build a follow system
+- [x] Build a follow system
 
 feature/additional-features
 
@@ -35,7 +35,7 @@ feature/additional-features
 
 feature/core
 
-- [x] Do laundry 😄
+- [x] Do laundry
 - [x] Create models: Forum, Thread, Comment
 - [x] Use default auth URLs
 - [x] Customize User model
