@@ -1,69 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Forum</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diễn đàn</title>
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     <style>
-        body {
-            padding-top: 56px;
-        }
+      body {
+        padding-top: 3.5rem;
+        background-color: #f7f7f7;
+      }
+      .navbar {
+        background-color: #343a40;
+      }
+      .navbar-brand {
+        color: #fff !important;
+      }
+      .navbar-nav .nav-link {
+        color: #fff !important;
+      }
+      .navbar-nav .nav-link:hover {
+        color: #ddd !important;
+      }
+      .bg-primary {
+        background-color: #5c7099 !important;
+      }
     </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'main:forum_list' %}">Logo</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'main:forum_list' %}">Home</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <!-- If the user is authenticated, show different links -->
-                    <li class="nav-item">
-                        <span class="nav-link">Hello, {{ user.display_name}}</span>
-                    </li>
-                    <li class="nav-item">
-                        <form method="post" action="{% url 'accounts:logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="nav-link btn btn-link">Logout</button>
-                        </form>
-                    </li>
-                    {% else %}
-                    <!-- If the user is not authenticated, show login and register links -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
-                    </li>
-                    {% endif %}
-
-                    <!-- Add more navigation links as needed -->
-                </ul>
-            </div>
+    <script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'main:forum_list' %}">Homepage</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto align-items-center">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <img src="{{ user.profile.avatar_thumbnail.url }}" alt="Avatar" class="rounded-circle" style="width: 32px; height: 32px;" />
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:profile' %}">Chào, {{ user.profile.display_name }}</a>
+              </li>
+              <li class="nav-item">
+                <form method="POST" action="{% url 'users:logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-link nav-link">Đăng xuất</button>
+                </form>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:login' %}">Đăng nhập</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'users:register' %}">Đăng ký</a>
+              </li>
+            {% endif %}
+          </ul>
         </div>
+      </div>
     </nav>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                {% block content %}{% endblock content %}
+    <div class="container mt-4">
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message|safe }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+          {% endfor %}
         </div>
+      {% endif %}
+
+      <div class="row">
+        <div class="col-lg-12">
+          {% block content %}
+
+          {% endblock %}
+        </div>
+      </div>
     </div>
 
     {% bootstrap_javascript %}
-</body>
-
+  </body>
 </html>

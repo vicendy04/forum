@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container">
+    <h2>Đăng ký</h2>
+    {% csrf_token %}
+    {% crispy form %}
+  </div>
+{% endblock %}

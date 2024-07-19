@@ -1,0 +1,42 @@
+{% if page_obj.paginator.num_pages > 1 %}
+  <!-- Pagination -->
+  <nav class="mt-4 d-flex justify-content-center" hx-boost="true">
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1" aria-label="First">&laquo; Đầu</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">Trước</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">&laquo; Đầu</span>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">Trước</span>
+        </li>
+      {% endif %}
+
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">Trang {{ page_obj.number }} trên {{ page_obj.paginator.num_pages }}</span>
+      </li>
+
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">Sau</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">Cuối &raquo;</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Sau</span>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">Cuối &raquo;</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

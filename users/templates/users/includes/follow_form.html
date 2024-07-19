@@ -1,0 +1,10 @@
+{% if user_from != user_to %}
+  <form hx-post="{% url 'users:follow' user_to.username %}" hx-trigger="submit" hx-swap="outerHTML" ht-target="#follow-div">
+    {% csrf_token %}
+    {% if user_from in followers %}
+      <button type="submit" class="btn btn-secondary">Unfollow</button>
+    {% else %}
+      <button type="submit" class="btn btn-primary">Follow</button>
+    {% endif %}
+  </form>
+{% endif %}

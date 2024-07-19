@@ -1,0 +1,20 @@
+<div class="list-group-item py-3">
+  <div class="d-flex">
+    <div class="flex-shrink-0 text-center border-end me-3 pe-3">
+      <a href="{{ comment.user.get_absolute_url }}" class="text-decoration-none"><img src="{{ comment.user.profile.avatar_thumbnail.url }}" alt="{{ comment.user.profile.display_name }}" class="rounded-circle me-2 align-self-start" style="width: 50px; height: 50px;" /></a>
+      <div class="mt-1">
+        <a href="{{ comment.user.get_absolute_url }}" class="text-decoration-none">{{ comment.user.profile.display_name }}</a>
+      </div>
+      <div class="text-muted"></div>
+    </div>
+    <div class="flex-grow-1">
+      <div class="d-flex w-100 justify-content-between border-bottom pb-2">
+        <small class="text-muted">{{ comment.created_at|date:'d M, Y' }}</small>
+      </div>
+      <p class="mt-2 text-break">{{ comment.content|linebreaksbr }}</p>
+      <div class="mt-2 d-flex justify-content-end" id="like-count-{{ comment.id }}">
+        {% include 'main/includes/like_form.html' %}
+      </div>
+    </div>
+  </div>
+</div>

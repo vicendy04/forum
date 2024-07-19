@@ -1,0 +1,83 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="profile-header d-flex justify-content-between align-items-center border-bottom pb-3">
+      <div class="d-flex align-items-center">
+        <img src="{{ profile.avatar_thumbnail.url }}" alt="Avatar" class="rounded-circle border" style="width: 100px; height: 100px;" />
+        <div class="profile-info ms-3">
+          <h3>{{ profile.display_name }}</h3>
+          <p class="text-muted">Joined: {{ user_to.date_joined|date:'d M, Y' }}</p>
+        </div>
+      </div>
+      <div class="profile-stats text-end">
+        <p class="mb-1">
+          <strong>Đã bình luận:</strong> {{ user_to.total_comments }}
+        </p>
+        <p class="mb-1">
+          <strong>Lượt reaction:</strong> {{ user_to.reaction_score }}
+        </p>
+      </div>
+    </div>
+    <div class="profile-actions mt-3 text-end" id="follow-div">
+      {% include 'users/includes/follow_form.html' %}
+    </div>
+
+    <ul class="nav nav-pills mt-4" id="profileTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">About</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="threads-tab" data-bs-toggle="tab" data-bs-target="#threads" type="button" role="tab" aria-controls="threads" aria-selected="false">Postings</button>
+      </li>
+    </ul>
+    <div class="tab-content mt-3" id="profileTabContent">
+      <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+        <!-- About content -->
+        <ul class="list-unstyled">
+          <li class="border-bottom py-2">
+            <p>
+              <strong>Following:</strong>
+            </p>
+            <div class="d-flex flex-wrap">
+              {% for follow in following %}
+                <a href="{% url 'users:user_profile' follow.username %}" class="text-decoration-none me-2"><img src="{{ follow.profile.avatar_thumbnail.url }}" alt="Avatar" class="rounded-circle border" style="width: 30px; height: 30px;" /></a>
+              {% endfor %}
+            </div>
+          </li>
+          <li class="border-bottom py-2">
+            <p>
+              <strong>Followers:</strong>
+            </p>
+            <div class="d-flex flex-wrap">
+              {% for follow in followers %}
+                <a href="{% url 'users:user_profile' follow.username %}" class="text-decoration-none me-2 mb-2"><img src="{{ follow.profile.avatar_thumbnail.url }}" alt="Avatar" class="rounded-circle border" style="width: 30px; height: 30px;" /></a>
+              {% endfor %}
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <!-- Profile content -->
+        <p>{{ profile.bio }}</p>
+      </div>
+
+      <div class="tab-pane fade" id="threads" role="tabpanel" aria-labelledby="threads-tab">
+        <!-- Threads content -->
+        <ul class="list-unstyled">
+          {% for thread in threads %}
+            <li class="border-bottom py-2">
+              <a href="{% url 'main:thread_detail' thread.slug %}" class="text-decoration-none">{{ thread.title }}</a>
+              <br />
+              <small class="text-muted">Đăng: {{ thread.created_at|date:'d M, Y' }}</small>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

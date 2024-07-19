@@ -4,22 +4,21 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main', '0003_thread_category_alter_post_thread'),
+        ("main", "0003_thread_category_alter_post_thread"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='category',
-            options={'verbose_name_plural': 'categories'},
+            name="category",
+            options={"verbose_name_plural": "categories"},
         ),
         migrations.AlterModelOptions(
-            name='post',
-            options={'verbose_name_plural': 'posts'},
+            name="post",
+            options={"verbose_name_plural": "posts"},
         ),
         migrations.AlterModelOptions(
-            name='thread',
-            options={'verbose_name_plural': 'threads'},
+            name="thread",
+            options={"verbose_name_plural": "threads"},
         ),
     ]

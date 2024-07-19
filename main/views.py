@@ -1,95 +1,113 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template.context_processors import csrf
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
+from django_htmx.http import HttpResponseClientRedirect
+
+from .forms import CommentForm, ThreadForm
+from .helpers import get_paged_object
+from .models import Comment, Forum, Thread
 
 
-from .models import Thread, Forum, Comment
-from .forms import ThreadForm, CommentForm
+def forum_list(request):
+    """Hiện các forum hiện có và thread mới nhất"""
+
+    forums = Forum.objects.all()
+    latest_threads = Thread.objects.order_by("-created_at")[:5]
+
+    context = {
+        "forums": forums,
+        "latest_threads": latest_threads,
+    }
+
+    return render(request, "main/index.html", context)
 
 
-# Create your views here.
-class ForumListView(ListView):
-    """Hiện các Forum hiện có"""
-
-    model = Forum
-    template_name = "main/index.html"
-    context_object_name = "forums"
-
-
-class ForumDetailView(DetailView):
+def forum_detail(request, slug):
     """Hiện các thread của Forum đó"""
 
-    model = Forum
-    template_name = "main/forum_detail.html"
-    context_object_name = "forum"
+    forum = get_object_or_404(Forum.objects.prefetch_related("threads"), slug=slug)
+    threads = forum.threads.order_by("-is_pinned", "-created_at")
 
-    def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the entries
-        forum = self.object
-        threads = forum.threads.order_by("-created_at")
-        context["threads"] = threads
-        return context
+    context = {"forum": forum}
+    context.update(get_paged_object(request, queryset=threads, paginate_by=5))
+
+    return render(request, "main/forum_detail.html", context)
 
 
-class ThreadDetailView(DetailView):
+def thread_detail(request, slug):
     """Hiện các comment trong thread đó"""
 
-    model = Thread
-    template_name = "main/thread_detail.html"
-    context_object_name = "thread"
+    thread = get_object_or_404(Thread.objects.prefetch_related("comments"), slug=slug)
+    comments = thread.comments.order_by("created_at")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        thread = self.object
-        comments = thread.comments.order_by("created_at")
+    context = {"forum": thread.forum, "thread": thread, "form": CommentForm()}
+    context.update(get_paged_object(request, queryset=comments, paginate_by=5))
 
-        # Phân trang các post
-        paginator = Paginator(comments, 5)
-        page_number = self.request.GET.get("page")
-
-        try:
-            comments_per_page = paginator.page(page_number)
-        except PageNotAnInteger:
-            comments_per_page = paginator.page(1)
-        except EmptyPage:
-            comments_per_page = paginator.page(paginator.num_pages)
-
-        context["comments_per_page"] = comments_per_page
-        context["paginator"] = paginator
-        # Render form trong template với tên form là form
-        context["form"] = CommentForm()
-        return context
+    return render(request, "main/thread_detail.html", context)
 
 
-# Chỗ này cần refactor
-class CommentCreateView(CreateView):
-    """Controller lưu form"""
+# @login_required and htmx can't be used together
+def add_comment(request, slug):
+    if not request.user.is_authenticated:
+        login_url = reverse_lazy("users:login")
+        thread_detail_url = reverse_lazy("main:thread_detail", kwargs={"slug": slug})
+        query_string = "?next=" + thread_detail_url
+        redirect_url = f"{login_url}{query_string}"
+        return HttpResponseClientRedirect(redirect_url)
 
-    model = Comment
-    form_class = CommentForm
+    # Sử dụng htmx để cập nhật phần bình luận không cần reload
+    if request.method == "POST" and request.htmx:
+        form = CommentForm(request.POST)
 
-    # Làm thêm vài thứ để xác thực trước khi lưu
-    def form_valid(self, form):
-        # Lấy thread_id từ url kwargs
-        slug = self.kwargs["slug"]
-        thread = get_object_or_404(Thread, slug=slug)
-        form.instance.thread_id = thread.id
-        return super().form_valid(form)
+        if form.is_valid():
+            thread = get_object_or_404(Thread.objects.all(), slug=slug)
+            form.instance.thread = thread
+            form.instance.user = request.user
+            comment = form.save()
 
-    # Sử dụng get_success_url thay cho get_absolute_url trong model
-    # def get_success_url(self):
-    #     pass
+            html_content = render_to_string(
+                "main/includes/comment_list.html", {"comment": comment}
+            )
+            return HttpResponse(content=html_content)
 
 
-class ThreadCreateView(CreateView):
+@login_required
+def add_thread(request, slug):
     """Controller xử lý form thêm mới thread"""
+    if request.method == "POST":
+        form = ThreadForm(data=request.POST, forum_slug=slug)
+        if form.is_valid():
+            thread = form.save(commit=False)
+            thread.user = request.user
+            thread.save()
+            return redirect("thread_detail", slug=thread.slug)
 
-    model = Thread
-    form_class = ThreadForm
-    template_name = "main/thread_form.html"
+    else:
+        form = ThreadForm(forum_slug=slug)
 
-    # Sử dụng get_success_url thay cho get_absolute_url trong models
-    # def get_success_url(self):
-    #     pass
+    return render(request, "main/thread_form.html", {"form": form})
+
+
+def like_comment(request, pk):
+    """Like button"""
+
+    if request.method == "POST" and request.htmx:
+        comment = get_object_or_404(
+            Comment.objects.prefetch_related("users_like"), pk=pk
+        )
+        this_user_liked = comment.users_like.filter(id=request.user.id).exists()
+
+        if this_user_liked:
+            comment.users_like.remove(request.user)
+        else:
+            comment.users_like.add(request.user)
+
+        context = {"comment": comment}
+        context.update(csrf(request))
+        html_content = render_to_string("main/includes/like_form.html", context)
+        return HttpResponse(content=html_content)

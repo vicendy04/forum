@@ -1,25 +1,19 @@
-# About the project 
+# Forum Website Pet Project
 
-Welcome to the Forum Website Pet Project!
+This project aims to create a simple forum.
 
-This project aims to create a simple forum where users can discuss various topics.
+## Main feature
 
-### Main features
+- Post and like comments, and dynamically validate forms using htmx
+- Auto-create user profiles on registration, view profiles, and follow users.
+- Simple categorize threads
 
+## Screenshot
 
-### Todo list
+![](screenshot/form_valid.jpeg)
 
-feature/core
+![](screenshot/threads.jpeg)
 
-- [x] Do laundry
-- [x] Create models: Forum, Thread, Comment
-- [x] Implement templates and forms for creating Thread and Comment
-- [x] Use default auth urls
-- [x] Create a custom User model
-- [x] Add slug functionality
-- [x] Add pagination
+![](screenshot/discussion.jpeg)
 
-refactor/change-model-name
-
-- [x] Create new model instead of renaming directly
-- [x] Update references
+![](screenshot/profile.jpeg)

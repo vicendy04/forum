@@ -1,29 +1,38 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<div class="mt-4">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+      <ol class="breadcrumb py-2 px-3 rounded">
+        <li class="breadcrumb-item">
+          <a href="{% url 'main:forum_list' %}" class="text-decoration-none">Diễn đàn</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'main:forum_detail' forum.slug %}" class="text-decoration-none">{{ forum.name }}</a>
+        </li>
+      </ol>
+    </nav>
+
     <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">{{ thread.title }}</h5>
-            <p class="card-text"><small class="text-muted">Created on: {{ thread.created_at|date:"F d, Y" }}</small></p>
-        </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ thread.title }}</h5>
+        <p class="card-text">
+          <small class="text-muted">Tạo vào: {{ thread.created_at|date:'d M, Y' }}</small>
+        </p>
+      </div>
     </div>
 
-    <div class="list-group">
-        {% for comment in comments_per_page %}
-        <div class="list-group-item">
-            <h5 class="mb-1">{{ comment.created_at|date:"F d, Y H:i" }}</h5>
-            <p class="mb-1">{{ comment.content }}</p>
-        </div>
-        {% empty %}
-        <div class="alert alert-warning" role="alert">
-            Thread này chưa có comment nào.
-        </div>
-        {% endfor %}
+    <div class="list-group mb-3" id="comment-list">
+      {% for comment in page_obj.object_list %}
+        {% include 'main/includes/comment_list.html' %}
+      {% empty %}
+        <div class="alert alert-warning" role="alert">Thread này chưa có bình luận nào.</div>
+      {% endfor %}
     </div>
 
-    {% include 'main/includes/pagination.html' with page_obj=comments_per_page %}
-    {% include 'main/includes/add_comment_form.html' %}
+    {% include 'main/includes/comment_pagination.html' %}
 
-</div>
-{% endblock content %}
+    {% include 'main/includes/comment_form.html' %}
+  </div>
+{% endblock %}

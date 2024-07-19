@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Access environment variables
+# See https://stackoverflow.com/a/64094381 how to setup your SECRET_KEY
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -38,14 +40,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # My apps
-    "main",
-    "accounts",
-    "users.apps.UsersConfig",
-    # Third party apps.
-    "django_bootstrap5",
-    "crispy_forms",
-    "crispy_bootstrap5",
     # Default apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -53,6 +47,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third party apps.
+    "django_bootstrap5",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "django_htmx",
+    "imagekit",
+    # My apps
+    "main",
+    "users",
 ]
 
 # Docs: https://github.com/django-crispy-forms/crispy-bootstrap5
@@ -69,6 +72,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Third party app
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = "forum_project.urls"
@@ -129,9 +134,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+# LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = os.getenv("LANGUAGE_CODE")
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "UTC"
+TIME_ZONE = os.getenv("TIME_ZONE")
 
 USE_I18N = True
 
@@ -143,6 +150,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -152,6 +160,21 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "main:forum_list"
 LOGOUT_REDIRECT_URL = "main:forum_list"
+LOGIN_URL = "users:login"  # use for @login_required decorator
 
-# AUTH_USER_MODEL = "auth.User"
 AUTH_USER_MODEL = "users.User"
+
+MEDIA_URL = "media/"  # Public URL
+MEDIA_ROOT = BASE_DIR / "media"  # Thư mục lưu ảnh
+
+# https://stackoverflow.com/questions/67044129/django-messages-bootstrap-toast-how-to-make-it-work
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "info",
+    messages.INFO: "info",
+    messages.SUCCESS: "success",
+    messages.WARNING: "warning",
+    messages.ERROR: "danger",
+}
