@@ -21,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Access environment variables
+# See https://stackoverflow.com/a/64094381 how to setup your SECRET_KEY
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -158,6 +160,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = "main:forum_list"
 LOGOUT_REDIRECT_URL = "main:forum_list"
+LOGIN_URL = "users:login"  # use for @login_required decorator
 
 AUTH_USER_MODEL = "users.User"
 

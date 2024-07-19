@@ -18,16 +18,14 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = get_user_model()
-        #
         # Ảnh hưởng đến thứ tự xuất hiện trong form
-        #
         fields = ["username", "display_name", "password1", "password2", "date_of_birth"]
         labels = {"username": "Tên người dùng"}
         widgets = {
             "username": forms.TextInput(
                 attrs={
                     "hx-get": reverse_lazy("users:check_username"),
-                    "hx-trigger": "keyup changed delay:2s",
+                    "hx-trigger": "keyup changed delay:1s",
                     "hx-swap": "innerHTML",
                     "hx-target": "#div_id_username",
                 }
@@ -36,6 +34,9 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # remove help_text
+        for field in self.fields.values():
+            field.help_text = ""
 
         # Trường không phải của model sẽ xử lý ở đây
         self.fields["password1"].label = "Mật khẩu"

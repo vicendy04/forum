@@ -72,7 +72,11 @@ def check_username(request):
 
 
 def user_profile(request, username):
-    user_to = get_object_or_404(get_user_model(), username=username)
+    User = get_user_model()
+    user_to = get_object_or_404(
+        User.objects.prefetch_related("threads_created", "followers", "following"),
+        username=username,
+    )
     profile = get_object_or_404(Profile, user=user_to)
 
     threads = user_to.threads_created.all()
@@ -90,15 +94,23 @@ def user_profile(request, username):
     return render(request, "users/user_profile.html", context)
 
 
+# @login_required and htmx can't be used together
 def follow(request, username):
     """Follow button"""
+
+    if not request.user.is_authenticated:
+        login_url = reverse_lazy("users:login")
+        user_profile_url = reverse_lazy(
+            "users:user_profile", kwargs={"username": username}
+        )
+        query_string = "?next=" + user_profile_url
+        redirect_url = f"{login_url}{query_string}"
+        return HttpResponseClientRedirect(redirect_url)
 
     if request.method == "POST" and request.htmx:
         user_from = request.user
         user_to = get_object_or_404(get_user_model(), username=username)
-        this_user_followed = user_from.following.filter(
-            username=user_to.username
-        ).exists()
+        this_user_followed = user_from.following.filter(id=user_to.id).exists()
 
         if this_user_followed:
             user_from.following.remove(user_to)
